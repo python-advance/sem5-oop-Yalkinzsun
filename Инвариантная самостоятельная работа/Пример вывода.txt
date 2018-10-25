@@ -1,0 +1,16 @@
+POST
+Date: 2018-10-25 18:28:51
+Id: 2cc0935d-f3aa-465b-a42a-aa5e37dccc33
+Author: Adam von Krusenstern
+Content: It's the content
+
+COMMENTS
+Date: 2018-10-25 18:28:51
+Id: 64fa9332-3fac-4d0c-bbb9-9250119814e0
+Author: Egor
+Content: One, two, three, I'm a princess
+
+Date: 2018-10-25 18:28:51
+Id: 117abc57-0cd1-4f8e-b9c5-83cfdf50bbe8
+Author: Anka
+Content: I'm crazy about cats ^^
