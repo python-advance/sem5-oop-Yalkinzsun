@@ -1,0 +1,18 @@
+>> Conference <<
+Date: 31/10/2018
+Id: 6f1edd5882964f34a5a4c86b00d12792
+Name: Google I/O
+Description: I/O brings together developers from around the globe annually for talks, hands-on learning with Google experts, and a first look at Google's latest developer product
+
+>> Members <<
+Nickname: Ylki
+Name: Kirill
+Surname: Skorobogatov
+Email: Kirill@gmail.com
+Birthday: 06/03/1998
+
+Nickname: Spiderman
+Name: Peter
+Surname: Parker
+Email: spider@spiderweb.com
+Birthday: 01/01/0001
