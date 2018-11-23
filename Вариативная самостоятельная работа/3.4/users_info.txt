@@ -1,0 +1,40 @@
+==== Получение информации о пользователе с id = 208608238 датавремя:2018-11-23 18:07:56 === 
+{
+    "user_info": [
+        {
+            "id": 208608238,
+            "first_name": "Kirill",
+            "last_name": "Skorobogatov",
+            "domain": "skorking",
+            "bdate": "6.3.1998",
+            "city": {
+                "id": 2,
+                "title": "Saint Petersburg"
+            },
+            "country": {
+                "id": 1,
+                "title": "Russia"
+            },
+            "online": 0,
+            "last_seen": {
+                "time": 1542995129,
+                "platform": 4
+            },
+            "counters": {
+                "albums": 26,
+                "videos": 0,
+                "audios": 1120,
+                "notes": 0,
+                "photos": 5160,
+                "groups": 74,
+                "gifts": 302,
+                "friends": 108,
+                "online_friends": 25,
+                "user_photos": 1,
+                "posts": 276,
+                "subscriptions": 0,
+                "pages": 49
+            }
+        }
+    ]
+}
