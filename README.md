@@ -139,3 +139,201 @@ class Member:
         print("Email: " + str(self.email))
         print("Birthday: " + str(self.birthday))
 ```
+3.4 Разработка скрипта для получения и сохранения данных социальных сетей Twitter, Instagram или VK.
+
+Для реализации скрипта были использованы следующие библиотеки:
+
+- vk -  для работы с API Вконтакте 
+- json - для работы с JSON-структурами
+- re - для создания регклярных выражений
+- datetime - для форматированного вывода текущего времени
+
+Также необходимо наличие ключа доступа (token), который можно получить на [этой](https://vkhost.github.io) странице. Или просто пароль и логин от личного аккаунта. 
+
+Небольшая проверка для токена на наличие допустимых символов:
+
+```Python
+pattern = r'[^\.a-z0-9]'
+  token = "YOUR TOKEN"
+  if re.search(pattern, token):
+    print('Invalid token!')
+  else:
+    session = vk.AuthSession(access_token= token)
+    api = vk.API(session, v='5.35', lang='en', timeout=10)
+```
+
+Функция для получения информации о конкретном пользоватле (добровольно указанных на его странице) по id (только цифры) с помощью метода **.users.get()** и запись её в файл:
+```Python
+def get_info(id):
+  id = str(id)
+  if id.isdigit():
+    mas = api.users.get(user_ids=id, fields= 'online, last_seen, bdate, counters, domain, country, city')
+    with open('users_info.txt', 'a') as f:
+       a, b = id, str("{0:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()))
+       f.write(f'==== Получение информации о пользователе с id = {a} | дата-время:{b} === \n')
+       json.dump({"user_info": mas}, f, indent=4, ensure_ascii=False)
+       f.write('\n')
+  else:
+    print('id пользователя состоит только из цифр!')
+```
+
+Результат: 
+```Python
+==== Получение информации о пользователе с id = 208608238 | датавремя:2018-11-23 18:07:56 === 
+{
+    "user_info": [
+        {
+            "id": 208608238,
+            "first_name": "Kirill",
+            "last_name": "Skorobogatov",
+            "domain": "skorking",
+            "bdate": "6.3.1998",
+            "city": {
+                "id": 2,
+                "title": "Saint Petersburg"
+            },
+            "country": {
+                "id": 1,
+                "title": "Russia"
+            },
+            "online": 0,
+            "last_seen": {
+                "time": 1542995129,
+                "platform": 4
+            },
+            "counters": {
+                "albums": 26,
+                "videos": 0,
+                "audios": 1120,
+                "notes": 0,
+                "photos": 5160,
+                "groups": 74,
+                "gifts": 302,
+                "friends": 108,
+                "online_friends": 25,
+                "user_photos": 1,
+                "posts": 276,
+                "subscriptions": 0,
+                "pages": 49
+            }
+        }
+    ]
+}
+```
+
+Получение id и типа аккаунта по username:
+```Python
+def get_type_and_id(name):
+  with open('get_type_and_id.txt', 'a') as f:
+       a = name
+       b = str("{0:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()))
+       f.write(f'==== Определение id и type по username = {a} | дата-время:{b} === \n')
+       result = api.utils.resolveScreenName(screen_name=name)
+       json.dump(result, f, indent=4, ensure_ascii=False)
+       f.write('\n')
+```
+
+Вывод:
+```Python
+==== Определение id и type по username = skorking | дата-время:2018-11-23 19:00:19 === 
+{
+    "type": "user",
+    "object_id": 208608238
+}
+```
+
+Функция для отправки сообщения пользователю на указанный id с использованием метода **.messages.send()** c прикреплённым файлом, в данном случае фотографией. Текст сообщения берётся из отдельного файла *message_text.txt*
+```Python
+def send_message(id):
+  with open('message_text.txt', 'r') as f:
+    text = ''
+    for line in f:
+      text+=line
+  api.messages.send(user_id=str(id), message=text, attachment = 'photo208608238_456242857')
+  print("Сообщение отправлено!")
+```
+
+Результат:
+
+![python.png](https://bit.ly/2EgBQ0Z)
+
+Просмотр истории n-сообщений с конца для id аккаунта, с которым велась переписка. Использовался метод **.messages.getHistory()**
+
+```Python
+def messages_history(id,number):
+  history = api.messages.getHistory(count=number, user_id=str(id), start_message_id = -1)
+  with open('history.txt', 'a') as f:
+       a,b = str(number),str(id)
+       c = str("{0:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()))
+       f.write(f'Получения последних {a} сообщений диалога с пользователем с id = {b} | дата-время:{c} \n')
+       json.dump(history, f, indent=4, ensure_ascii=False)
+       f.write('\n')
+```
+
+Результат: 
+```Python
+Получения последних 3 сообщений диалога с пользователем с id = 208608238 | дата-время:2018-11-23 19:01:15 
+{
+    "count": 333,
+    "items": [
+        {
+            "id": 214075,
+            "body": "Третье сообщение",
+            "user_id": 208608238,
+            "from_id": 208608238,
+            "date": 1542999592,
+            "read_state": 1,
+            "out": 0
+        },
+        {
+            "id": 214074,
+            "body": "Второе сообщение",
+            "user_id": 208608238,
+            "from_id": 208608238,
+            "date": 1542999586,
+            "read_state": 1,
+            "out": 0
+        },
+        {
+            "id": 214073,
+            "body": "Первое сообщение",
+            "user_id": 208608238,
+            "from_id": 208608238,
+            "date": 1542999580,
+            "read_state": 1,
+            "out": 0
+        }
+    ]
+}
+```
+
+Функция просмотра количества лаков определённой фотографии и id лайкнувших пользователей c помощью метода **.likes.getList()** : 
+```Python
+def get_photo_likes(id_owner, id_item):
+  likes = api.likes.getList(type='photo', owner_id=str(id_owner), item_id=str(id_item))
+  with open('likes.txt', 'a') as f:
+     a,b = str(id_owner),str(id_item)
+     c = str("{0:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()))
+     f.write(f'Кол-во лайков фотографии с id = {b} пользователя с id = {a} + список id-лайкнувших | дата-время:{c} \n')
+     json.dump(likes, f, indent=4, ensure_ascii=False)
+     f.write('\n')
+```
+
+Результат:
+
+```Python
+Кол-во лайков фотографии с id = 456251564 пользователя с id = 34045589 + список id-лайкнувших | дата-время:2018-11-23 18:56:33 
+{
+    "count": 60,
+    "items": [
+        7920505,
+        498245675,
+        227029873,
+        ...
+        48916669,
+        157002424,
+        69488120,
+        134193253
+    ]
+}
+```
